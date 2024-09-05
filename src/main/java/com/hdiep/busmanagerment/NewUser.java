@@ -4,6 +4,12 @@
  */
 package com.hdiep.busmanagerment;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author diepm
@@ -160,10 +166,47 @@ public class NewUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         String firstName = FirstnameTF.getText();
         String lastName = LastnameTF.getText();
-        String Username = UsernameTF.getText();
-        String password = PasswordTF.getText();
-        String email = EmailTF.getText();
+        String userName = UsernameTF.getText();
+        String PassWord = PasswordTF.getText();
+        String emailId = EmailTF.getText();
         String web_url = WeburlTF.getText();
+        
+        // SQL query with placeholders
+         String insertQuery = "INSERT INTO Busm.user_details (firstName, lastName, userName,PassWord, emailId, web_url) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            // load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // Establish a connection to the database
+            String databaseURL = "jdbc:mysql://localhost:3306/Busm";
+            Connection con = DriverManager.getConnection(databaseURL, "root", "123456");
+            //Create a PreparedStatement
+            PreparedStatement pstmt = con.prepareStatement(insertQuery);
+            
+            //Set the values for the placeholders
+            pstmt.setString(1, firstName);
+            pstmt.setString(2, lastName);
+            pstmt.setString(3, userName);
+            pstmt.setString(4, PassWord);
+            pstmt.setString(5, emailId);
+            pstmt.setString(6, web_url);
+            
+            // execute the query
+            int rowAffected = pstmt.executeUpdate();
+            System.out.println("Rows inserted" + rowAffected);
+            
+            // Close resources
+            pstmt.close();
+            con.close();
+        } catch (ClassNotFoundException e) {
+            System.out.println("JDBC Driver not Found");
+            e.printStackTrace();
+        } catch (SQLException e){
+            System.out.println("SQL error");
+            e.printStackTrace();
+        } catch (Exception e){
+            System.out.println("General error.");
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_RegisterBtnActionPerformed
 
     /**
