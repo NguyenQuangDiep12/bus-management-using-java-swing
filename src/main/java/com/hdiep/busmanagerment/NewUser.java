@@ -3,6 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.hdiep.busmanagerment;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -79,6 +87,11 @@ public class NewUser extends javax.swing.JFrame {
 
         SigninBtn.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         SigninBtn.setText("Already have account ? Sign In");
+        SigninBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SigninBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -157,14 +170,93 @@ public class NewUser extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RegisterBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterBtnActionPerformed
-        // TODO add your handling code here:
         String firstName = FirstnameTF.getText();
         String lastName = LastnameTF.getText();
-        String Username = UsernameTF.getText();
-        String password = PasswordTF.getText();
-        String email = EmailTF.getText();
+        String userName = UsernameTF.getText();
+        String PassWord = PasswordTF.getText();
+        String emailId = EmailTF.getText();
         String web_url = WeburlTF.getText();
+        
+        
+        try {
+            // load the MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // Establish a connection to the database
+            String databaseURL = "jdbc:mysql://localhost:3306/Busm";
+            Connection con = DriverManager.getConnection(databaseURL, "root", "123456");
+            
+            // SQL query with placeholders
+            String insertQuery = "INSERT INTO Busm.user_details (firstName, lastName, userName,PassWord, emailId, web_url) VALUES (?, ?, ?, ?, ?, ?)";
+            String selectQuery = "SELECT count(*) from user_details where username=? and password=?";
+            //Create a PreparedStatement
+            PreparedStatement pstmt = con.prepareStatement(insertQuery);
+            PreparedStatement pstmt1 = con.prepareStatement(selectQuery);
+            //Set the values for the placeholders
+            pstmt.setString(1, firstName);
+            pstmt.setString(2, lastName);
+            pstmt.setString(3, userName);
+            pstmt.setString(4, PassWord);
+            pstmt.setString(5, emailId);
+            pstmt.setString(6, web_url);
+            
+            pstmt1.setString(1, userName);
+            pstmt1.setString(2, PassWord);
+            
+            // execute the query
+            int rowAffected = pstmt.executeUpdate();
+            System.out.println("Rows inserted" + rowAffected);
+            
+            ResultSet rs = pstmt1.executeQuery();
+            System.out.println(rs.next());
+            if(rs.next() == true){
+                infoMessage("Already Regist", "Welcome Bro!");
+            }else{
+            String insertQuery1 = "insert into user_details values(null, ?, ? , ? , ? , ? , ?)";
+            
+            PreparedStatement psIn1 = con.prepareStatement(insertQuery1);
+            psIn1.setString(1, firstName);
+            psIn1.setString(2, lastName);
+            psIn1.setString(3, userName);
+            psIn1.setString(4,PassWord);
+            psIn1.setString(5, emailId);
+            psIn1.setString(6, web_url);
+            
+            //execute a query
+                int rowAffected1 = psIn1.executeUpdate();
+                System.out.println("Row inserted" + " " +rowAffected1);
+                infoMessage("Infomation is Inserted", "Welcome Bro");
+                dispose();
+                UserLogin ln = new UserLogin();
+                ln.setLocationRelativeTo(null);
+                ln.setVisible(true);
+            }
+            
+            // Close resources
+            pstmt.close();
+            con.close();
+        } catch (ClassNotFoundException e) {
+            System.out.println("JDBC Driver not Found");
+            e.printStackTrace();
+        } catch (SQLException e){
+            System.out.println("SQL error");
+            e.printStackTrace();
+        } catch (Exception e){
+            System.out.println("General error.");
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_RegisterBtnActionPerformed
+
+    public void infoMessage(String message, String title){
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void SigninBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SigninBtnActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        UserLogin u1 = new UserLogin();
+        u1.setVisible(true);
+        u1.setLocationRelativeTo(null);
+    }//GEN-LAST:event_SigninBtnActionPerformed
 
     /**
      * @param args the command line arguments
