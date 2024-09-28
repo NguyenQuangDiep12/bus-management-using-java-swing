@@ -188,12 +188,13 @@ public class UserLogin extends javax.swing.JFrame {
                 String dbUser = "root";
                 String dbPassword = "123456";
                 Connection con = DriverManager.getConnection(DatabaseURL, dbUser, dbPassword);
+                
 
                 String query = "select * from user_details where userName = ? and PassWord = ?";
                 PreparedStatement pstmt = con.prepareStatement(query);
                 pstmt.setString(1, username);
                 pstmt.setString(2, password);
-
+                
                 ResultSet rs = pstmt.executeQuery();
                 if(rs.next()){
                     infoMessage("Welcome...", "Alert");
@@ -202,7 +203,7 @@ public class UserLogin extends javax.swing.JFrame {
                     ucp.setLocationRelativeTo(null);
                     ucp.setVisible(true);
                 }else{
-                    infoMessage("Create New Account", "Welcome Bro !!");
+                    infoMessage("User not found", "Invalid User");
                     dispose();
                     NewUser nu = new NewUser();
                     nu.setLocationRelativeTo(null);

@@ -4,6 +4,10 @@
 
 package com.hdiep.busmanagerment;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+
 /**
  *
  * @author diepm
@@ -14,5 +18,6 @@ public class BusManagerment {
         MainScreen mainscreen = new MainScreen();
         mainscreen.setVisible(true);
         mainscreen.setSize(600, 600);
+        
     }
 }

@@ -22,7 +22,7 @@ public class UserControlPanel extends javax.swing.JFrame {
         initComponents();
         this.UserLogin = UserLogin;
         String getValue = jLabel1.getText();
-        jLabel1.setText(getValue + " :" + UserLogin);
+        jLabel1.setText(getValue + " : " + UserLogin);
     }
     
     /**
