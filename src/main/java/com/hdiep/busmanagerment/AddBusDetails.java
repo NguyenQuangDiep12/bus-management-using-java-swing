@@ -8,6 +8,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -44,12 +48,12 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        priceTF = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        SeatTF = new javax.swing.JTextField();
         departDateD = new org.jdesktop.swingx.JXDatePicker();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        MovementTF = new javax.swing.JComboBox<>();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Add Bus Details");
@@ -85,7 +89,7 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel6.setText("Price");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        priceTF.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel7.setText("Date");
@@ -93,11 +97,11 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("Seat");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "furniture", "Household appliances", "Electronics", "Game" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        MovementTF.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        MovementTF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "furniture", "Household appliances", "Electronics", "Game" }));
+        MovementTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                MovementTFActionPerformed(evt);
             }
         });
 
@@ -125,12 +129,12 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButton2)
                         .addComponent(bus_DestinationTF, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-                        .addComponent(jTextField2))
+                        .addComponent(priceTF))
                     .addComponent(bus_SourceTF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bus_noTF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SeatTF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(departDateD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(MovementTF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(125, 125, 125))
         );
         layout.setVerticalGroup(
@@ -153,9 +157,9 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(MovementTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(priceTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(departDateD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -168,7 +172,7 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(SeatTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
@@ -189,6 +193,9 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
         bus_noTF.setText("");
         bus_SourceTF.setText("");
         bus_DestinationTF.setText("");
+        
+        priceTF.setText("");
+        SeatTF.setText("");
     }
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -196,6 +203,14 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
         String busnoD = bus_noTF.getText();
         String bussourceD = bus_SourceTF.getText();
         String busDestinationD = bus_DestinationTF.getText();
+        
+        Date departDateD = (Date) this.departDateD.getDate();
+        SimpleDateFormat oDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        Locale loc = new Locale("en", "US");
+//        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, loc);
+        String departDate = oDateFormat.format(departDateD);
+        String priceD = priceTF.getText();
+        String seatD = SeatTF.getText();
         
         try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
@@ -214,12 +229,15 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
                     infoMessage("Already Bus Details is Added", "Create Fresh Entry !!");
                     
                 }else{
-                    String insertQuery1 = "insert into bus_details values(null, ?, ? , ?)";
+                    String insertQuery1 = "insert into bus_details values(null, ?, ? , ?, ?, ?, ?)";
             
                     PreparedStatement psIn1 = con.prepareStatement(insertQuery1);
                     psIn1.setString(1, busnoD);
                     psIn1.setString(2, bussourceD);
                     psIn1.setString(3, busDestinationD);
+                    psIn1.setString(4, departDate);
+                    psIn1.setString(5, priceD);
+                    psIn1.setString(6, seatD);
             
                 //execute a query
                     int rowAffected1 = psIn1.executeUpdate();
@@ -237,20 +255,21 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
             } 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void MovementTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MovementTFActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_MovementTFActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> MovementTF;
+    private javax.swing.JTextField SeatTF;
     private javax.swing.JTextField bus_DestinationTF;
     private javax.swing.JTextField bus_SourceTF;
     private javax.swing.JTextField bus_noTF;
     private org.jdesktop.swingx.JXDatePicker departDateD;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -259,7 +278,6 @@ public class AddBusDetails extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField priceTF;
     // End of variables declaration//GEN-END:variables
 }
