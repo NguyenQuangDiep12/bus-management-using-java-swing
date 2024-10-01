@@ -4,12 +4,21 @@
  */
 package com.hdiep.busmanagerment;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import java.util.List;
+
 /**
  *
  * @author diepm
  */
 public class AdminControlPanel extends javax.swing.JFrame {
 
+    
     /**
      * Creates new form AdminControlPanel
      */
@@ -79,11 +88,11 @@ public class AdminControlPanel extends javax.swing.JFrame {
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 718, Short.MAX_VALUE)
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 312, Short.MAX_VALUE)
+            .addGap(0, 390, Short.MAX_VALUE)
         );
 
         jMenu1.setText("Bus Manage");
@@ -107,6 +116,11 @@ public class AdminControlPanel extends javax.swing.JFrame {
 
         jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem6.setText("All Bus Time");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem6);
 
         jMenuBar1.add(jMenu1);
@@ -213,16 +227,66 @@ public class AdminControlPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+     public void infoMessage(String message, String title){
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    
+    
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         AddBusDetails adb = new AddBusDetails();
         jDesktopPane1.add(adb);
         adb.show();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        // database connection
+        
+        
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/Busm";
+            String username = "root";
+            String password = "123456";
+            Connection con = DriverManager.getConnection(url, username, password);
+            
+            String selectQuery = "select id, bus_no, bus_source, bus_dest, departDate, price, seat from bus_details";
+           // preparestatement
+            PreparedStatement pstmt = con.prepareStatement(selectQuery);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            // create a list contain the bus data from the ResultSet
+            List<Object[]> busData = new ArrayList<>();
+            while(rs.next()){
+                // data will be added until finish
+               Object[] rowData  = {
+                rs.getInt("id"),
+                rs.getString("bus_no"),
+                rs.getString("bus_source"),
+                rs.getString("bus_dest"),
+                rs.getString("departDate"),
+                rs.getDouble("price"),
+                rs.getInt("seat")
+               };
+               busData.add(rowData);
+                       }
+            con.close();
+            pstmt.close();
+            rs.close();
+            
+            AllBusDetails allBusDetails = new AllBusDetails();
+        }catch (Exception e) {
+            infoMessage("Error Not Found" + e.getMessage(), "Alert");
+        }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
