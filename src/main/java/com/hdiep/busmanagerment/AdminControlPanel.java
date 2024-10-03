@@ -246,46 +246,10 @@ public class AdminControlPanel extends javax.swing.JFrame {
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         // TODO add your handling code here:
-        // database connection
-        
-        
-        
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/Busm";
-            String username = "root";
-            String password = "123456";
-            Connection con = DriverManager.getConnection(url, username, password);
-            
-            String selectQuery = "select id, bus_no, bus_source, bus_dest, departDate, price, seat from bus_details";
-           // preparestatement
-            PreparedStatement pstmt = con.prepareStatement(selectQuery);
-            
-            ResultSet rs = pstmt.executeQuery();
-            
-            // create a list contain the bus data from the ResultSet
-            List<Object[]> busData = new ArrayList<>();
-            while(rs.next()){
-                // data will be added until finish
-               Object[] rowData  = {
-                rs.getInt("id"),
-                rs.getString("bus_no"),
-                rs.getString("bus_source"),
-                rs.getString("bus_dest"),
-                rs.getString("departDate"),
-                rs.getDouble("price"),
-                rs.getInt("seat")
-               };
-               busData.add(rowData);
-                       }
-            con.close();
-            pstmt.close();
-            rs.close();
-            
-            AllBusDetails allBusDetails = new AllBusDetails();
-        }catch (Exception e) {
-            infoMessage("Error Not Found" + e.getMessage(), "Alert");
-        }
+        // mo All Bus Details khi nhan vao JMenuItem
+        dispose();
+        AllBusDetails adb = new AllBusDetails();
+        adb.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**

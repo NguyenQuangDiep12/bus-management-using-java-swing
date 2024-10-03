@@ -5,6 +5,13 @@
 package com.hdiep.busmanagerment;
 
 import java.awt.BorderLayout;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,19 +23,12 @@ import java.util.List;
  * @author diepm
  */
 public class AllBusDetails extends javax.swing.JFrame {
-
-    private JTable jtable;
-    private DefaultTableModel model;
-   
     /**
      * Creates new form AllBusDetails
      */
     public AllBusDetails() {
         initComponents();
-       
     }
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,39 +40,40 @@ public class AllBusDetails extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jTable1.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                jTable1AncestorAdded(evt);
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+        jScrollPane1.setViewportView(jTable1);
+
+        jButton1.setText("Show");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 649, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(46, 46, 46)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,15 +81,73 @@ public class AllBusDetails extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTable1AncestorAdded
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String[] tblHead = {"Id", "Bus No", "Bus Source", "Bus Destination", "Price", "Seat"};
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
         
-    }//GEN-LAST:event_jTable1AncestorAdded
+        // Xoá cột cũ và thêm các tiêu đề cột mới 
+        dtm.setColumnCount(0); // xóa hết các cũ nếu có 
+        dtm.setRowCount(0); // xoa cac cot co san neu co
+        
+        // them cot tieu de moi
+        for(String item : tblHead){
+            dtm.addColumn(item); // them cot moi
+        }
+        
+        
+        try {
+            // ket noi co so du lieu
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/Busm";
+            String username = "root";
+            String password = "123456";
+            // Truy vao du lieu
+            try (Connection con = DriverManager.getConnection(url, username, password)) {
+                // Truy vao du lieu
+                String selectQuery = "select id, bus_no, bus_source, bus_dest, departDate, price, seat from bus_details ";
+                PreparedStatement pstmt = con.prepareStatement(selectQuery);
+                ResultSet rs = pstmt.executeQuery();
+                // lay thong tin tu ResultSet va them vao DefaultTableModel
+                while (rs.next()) {
+                    Object[] rowData = new Object[7];
+                    rowData[0] = rs.getInt("id");
+                    rowData[1] = rs.getString("bus_no");
+                    rowData[2] = rs.getString("bus_source");
+                    rowData[3] = rs.getString("bus_dest");
+                    rowData[4] = rs.getString("departDate");
+                    rowData[5] = rs.getString("price");
+                    rowData[6] = rs.getString("seat");
+                    
+                    // them hang vao mo ta cua bang
+                    dtm.addRow(rowData);
+                }
+                // dong ket noi
+                con.close();
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("SQL Error!");
+            e.printStackTrace();
+        }catch (ClassNotFoundException p ){
+            System.out.println("Class Not Found Exception!");
+            p.printStackTrace();
+        }catch (Exception x){
+            System.out.println("General Error!");
+            x.printStackTrace();
+        }
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,6 +185,7 @@ public class AllBusDetails extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
